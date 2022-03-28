@@ -83,18 +83,17 @@ if sidebar_ == 'The New Language of Food':
     )
 
     if option == 'Cell-based Meat':
-        st.write('Meat that is comprised of animal cells grown outside an animal in a bioreactor. These products are genetically identical to conventional animal products. Cell-based meat is also referred to by others as clean meat, lab-grown meat, cultured meat, or in-vitro meat.')
+        st.info('Meat that is comprised of animal cells grown outside an animal in a bioreactor. These products are genetically identical to conventional animal products. Cell-based meat is also referred to by others as clean meat, lab-grown meat, cultured meat, or in-vitro meat.')
     elif option == 'Chemical Synthesis': 
-        st.write('The construction of chemical compounds through a series of chemical reactions or physical manipulations to get from precursors (petrochemical or natural) to organic molecules. Synthesis is used to discover compounds with new physical or biological properties, to produce compounds that do not form naturally, or to make products in large quantities. Products created through chemical synthesis are typically referred to as synthetic or man-made and are alternatives to natural products.'）
+        st.info('The construction of chemical compounds through a series of chemical reactions or physical manipulations to get from precursors (petrochemical or natural) to organic molecules. Synthesis is used to discover compounds with new physical or biological properties, to produce compounds that do not form naturally, or to make products in large quantities. Products created through chemical synthesis are typically referred to as synthetic or man-made and are alternatives to natural products.')
     else:
         st.write('xxx')
     color = st.select_slider(
      '请选择该领域中项目与之相关的等级：',
      options=['毫无关系', '部分相关', '涉及', '高度应用', '主题完全相符'])
     st.write('该领域中，你认为项目与之相关的等级为：', color)
+    st.balloons()
              
-    
-
 df = pd.DataFrame(
      np.random.randn(1000, 2) / [50, 50] + [37.76, -122.4],
      columns=['lat', 'lon'])
