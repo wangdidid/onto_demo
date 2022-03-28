@@ -7,7 +7,7 @@ st.title('农业食品技术评估  DEMO')
 sidebar_ = st.sidebar.radio(
     "Part",
     ['The Second Domestication of Plants and Animals', 'Disruption and Adoption', 'Impacts and Implications', ],
-    index=2
+    index=0
 )
 
 if sidebar_ == 'The Second Domestication of Plants and Animals':
