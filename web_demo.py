@@ -10,23 +10,39 @@ sidebar_ = st.sidebar.radio(
     index=2
 )
 
-st.graphviz_chart('''
-    digraph {
-        run -> intr
-        intr -> runbl
-        runbl -> run
-        run -> kernel
-        kernel -> zombie
-        kernel -> sleep
-        kernel -> runmem
-        sleep -> swap
-        swap -> runswap
-        runswap -> new
-        runswap -> runmem
-        new -> runmem
-        sleep -> runmem
-    }
-''')
+if sidebar_ == 'The Second Domestication of Plants and Animals':
+    col1, col2, col3 = st.columns(3)
+
+    with col1:
+        st.header("A cat")
+        st.image("https://static.streamlit.io/examples/cat.jpg")
+
+    with col2:
+        st.header("A dog")
+        st.image("https://static.streamlit.io/examples/dog.jpg")
+
+    with col3:
+        st.header("An owl")
+        st.image("https://static.streamlit.io/examples/owl.jpg")
+        
+if sidebar_ == 'Disruption and Adoption':       
+    st.graphviz_chart('''
+        digraph {
+            run -> intr
+            intr -> runbl
+            runbl -> run
+            run -> kernel
+            kernel -> zombie
+            kernel -> sleep
+            kernel -> runmem
+            sleep -> swap
+            swap -> runswap
+            runswap -> new
+            runswap -> runmem
+            new -> runmem
+            sleep -> runmem
+        }
+    ''')
 
 
 df = pd.DataFrame(
@@ -34,16 +50,3 @@ df = pd.DataFrame(
      columns=['lat', 'lon'])
 st.map(df)
 
-col1, col2, col3 = st.columns(3)
-
-with col1:
-    st.header("A cat")
-    st.image("https://static.streamlit.io/examples/cat.jpg")
-
-with col2:
-    st.header("A dog")
-    st.image("https://static.streamlit.io/examples/dog.jpg")
-
-with col3:
-    st.header("An owl")
-    st.image("https://static.streamlit.io/examples/owl.jpg")
