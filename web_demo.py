@@ -85,7 +85,7 @@ if sidebar_ == 'The New Language of Food':
     if option == 'Cell-based Meat':
         st.write('Meat that is comprised of animal cells grown outside an animal in a bioreactor. These products are genetically identical to conventional animal products. Cell-based meat is also referred to by others as clean meat, lab-grown meat, cultured meat, or in-vitro meat.')
     elif option == 'Chemical Synthesis': 
-        st.write('The construction of chemical compounds through a series of chemical reactions or physical manipulations to get from precursors (petrochemical or natural) to organic molecules. Synthesis is used to discover compounds with new physical or biological properties, to produce compounds that do not form naturally, or to make products in large quantities. Products created through chemical synthesis are typically referred to as synthetic or man-made and are alternatives to natural products.
+        st.write('The construction of chemical compounds through a series of chemical reactions or physical manipulations to get from precursors (petrochemical or natural) to organic molecules. Synthesis is used to discover compounds with new physical or biological properties, to produce compounds that do not form naturally, or to make products in large quantities. Products created through chemical synthesis are typically referred to as synthetic or man-made and are alternatives to natural products.‘）
     else:
         st.write('xxx')
     color = st.select_slider(
