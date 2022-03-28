@@ -91,7 +91,6 @@ if sidebar_ == 'The New Language of Food':
     color = st.select_slider(
      '请选择该领域中项目与之相关的等级：',
      options=['毫无关系', '部分相关', '涉及', '高度应用', '主题完全相符'],
-    index=3
 )
     st.write('该领域中，你认为项目与之相关的等级为：', color)
     st.balloons()
