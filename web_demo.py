@@ -1,102 +1,192 @@
 import streamlit as st
 import numpy as np
 import pandas as pd
+import datetime as dt
+import plotly.offline as py
+import plotly.graph_objs as go
+import plotly.figure_factory as ff
 
-st.title('农业食品技术评估  DEMO')
+st.title('Food System Trilemma Index Tool: DEMO')
 
 sidebar_ = st.sidebar.radio(
-    "Part",
-    ['The Second Domestication of Plants and Animals', 'Disruption and Adoption', 'Impacts and Implications', 'The New Language of Food'],
-    index=3
+    "Terminal",
+    ['Input', 'Output'],
+    index=0
 )
 
-if sidebar_ == 'The Second Domestication of Plants and Animals':
-    col1, col2, col3 = st.columns(3)
+input_series = pd.Series()
 
-    with col1:
-        st.header("A cat")
-        st.image("https://static.streamlit.io/examples/cat.jpg")
-
-    with col2:
-        st.header("A dog")
-        st.image("https://static.streamlit.io/examples/dog.jpg")
-
-    with col3:
-        st.header("An owl")
-        st.image("https://static.streamlit.io/examples/owl.jpg")
-        
-if sidebar_ == 'Disruption and Adoption':       
-    st.graphviz_chart('''
-        digraph {
-            run -> intr
-            intr -> runbl
-            runbl -> run
-            run -> kernel
-            kernel -> zombie
-            kernel -> sleep
-            kernel -> runmem
-            sleep -> swap
-            swap -> runswap
-            runswap -> new
-            runswap -> runmem
-            new -> runmem
-            sleep -> runmem
-        }
-    ''')
-
-if sidebar_ == 'Impacts and Implications': 
-    col1, col2, col3 = st.columns(3)
-    col1.metric("FOOD SECURITY", "70 %", "1.2 %")
-    col2.metric("ENVIRONMENTAL SUSTAINABILITY", "9 %", "-8 %")
-    col3.metric("ECONOMIC EQUITY", "86 %", "4 %")
-    
-#     st.selectbox('', options)
-                 
-if sidebar_ == 'The New Language of Food':
+if sidebar_ == 'Input':
     option = st.selectbox(
-     'The New Language of Food',
-     ('Cell-based Meat', 
-      'Chemical Synthesis', 
-      'Computational Biology',
-      'Enzyme',
-      'Fermentation Tank',
-      'Food-as-Software',
-      'Form factor',
-      'Fortification',
-      'Genetic Engineering',
-      'High-throughput Screening',
-      'Industrial Agriculture',
-      'Macro-organism',
-      'Metabolic Engineering',
-      'Micro-organism (microbe)',
-      'Modern Food',
-      'Mycoprotein',
-      'Plant-based Meat',
-      'Precision Agriculture',
-      'Precision Biology',
-      'Precision Fermentation',
-      'Precision-fermentation Enabled',
-      'Precision-fermentation Enhanced',
-      'Synthetic Biology',
-      'Systems Biology',
-     )
+        'The New Language of Food',
+        ('Cell-based Meat',
+         'Chemical Synthesis',
+         'Computational Biology',
+         'Enzyme',
+         'Fermentation Tank',
+         'Food-as-Software',
+         'Form factor',
+         'Fortification',
+         'Genetic Engineering',
+         'High-throughput Screening',
+         'Industrial Agriculture',
+         'Macro-organism',
+         'Metabolic Engineering',
+         'Micro-organism (microbe)',
+         'Modern Food',
+         'Mycoprotein',
+         'Plant-based Meat',
+         'Precision Agriculture',
+         'Precision Biology',
+         'Precision Fermentation',
+         'Precision-fermentation Enabled',
+         'Precision-fermentation Enhanced',
+         'Synthetic Biology',
+         'Systems Biology',
+         )
     )
 
     if option == 'Cell-based Meat':
-        st.info('Meat that is comprised of animal cells grown outside an animal in a bioreactor. These products are genetically identical to conventional animal products. Cell-based meat is also referred to by others as clean meat, lab-grown meat, cultured meat, or in-vitro meat.')
-    elif option == 'Chemical Synthesis': 
-        st.info('The construction of chemical compounds through a series of chemical reactions or physical manipulations to get from precursors (petrochemical or natural) to organic molecules. Synthesis is used to discover compounds with new physical or biological properties, to produce compounds that do not form naturally, or to make products in large quantities. Products created through chemical synthesis are typically referred to as synthetic or man-made and are alternatives to natural products.')
+        st.info(
+            'Meat that is comprised of animal cells grown outside an animal in a bioreactor. These products are '
+            'genetically identical to conventional animal products. Cell-based meat is also referred to by others as '
+            'clean meat, lab-grown meat, cultured meat, or in-vitro meat.')
+    elif option == 'Chemical Synthesis':
+        st.info(
+            'The construction of chemical compounds through a series of chemical reactions or physical manipulations to get from precursors (petrochemical or natural) to organic molecules. Synthesis is used to discover compounds with new physical or biological properties, to produce compounds that do not form naturally, or to make products in large quantities. Products created through chemical synthesis are typically referred to as synthetic or man-made and are alternatives to natural products.')
     else:
         st.write('xxx')
-    color = st.select_slider(
-     '请选择该领域中项目与之相关的等级：',
-     options=['毫无关系', '部分相关', '涉及', '高度应用', '主题完全相符'],
-)
-    st.write('该领域中，你认为项目与之相关的等级为：', color)
-    st.balloons()
-             
-df = pd.DataFrame(
-     np.random.randn(1000, 2) / [50, 50] + [37.76, -122.4],
-     columns=['lat', 'lon'])
-st.map(df)
+    correlation = st.select_slider(
+        'Correlation',
+        options=['Irrelevant', 'Slightly related', 'Involved', 'Essential'],
+    )
+    # if len(correlation) != 0:
+    #     st.write('该领域中，你认为项目与之相关的等级为：', correlation)
+    # st.balloons()
+    st.write('-------------------------------------------')
+
+    col1, col2, col3 = st.columns(3)
+
+    with col1:
+        if st.button(label="Next", help="Click to jump to the next problem"):
+            input_series[option] = correlation
+            input_series.to_pickle('Data/temp.pkl')
+    with col2:
+        st.button(label="Former", help="Click to jump to the previous problem", on_click=None, args=None, kwargs=None)
+
+    with col3:
+        if st.button(label="Submit", help="Click to submit all responses", on_click=None, args=None, kwargs=None):
+            st.write('The submit succeeded.')
+
+# df = pd.DataFrame(
+#     np.random.randn(1000, 2) / [50, 50] + [37.76, -122.4],
+#     columns=['lat', 'lon'])
+# st.map(df)
+
+if sidebar_ == 'Output':
+    try:
+        input_series = pd.read_pickle('Data/temp.pkl')
+    except:
+        pass
+    if len(input_series) == 0:
+        st.info("The system haven't learned all the necessary information, please reply to the input terminal.")
+        st.button('input',help='Click to jump to the input terminal.')
+
+
+    else:
+        st.download_button(
+            label="Full Report",
+            help='Click to download the full report(PDF)',
+            data='pdf',
+            file_name=None,
+            mime=None,
+        )
+        col1, col2 = st.columns(2)
+
+        with col1:
+            st.subheader('Trilemma Score')
+            st.info(75.7)
+        with col2:
+            st.subheader('Balance Grade')
+            st.info('BBC')
+        st.write('-------------------------------------------')
+
+        st.subheader('Balance')
+        categories = ['FOOD SECURITY',
+                      'ENVIRONMENTAL SUSTAINABILITY',
+                      'FOOD EQUITY']
+
+        fig = go.Figure()
+
+        fig.add_trace(go.Scatterpolar(
+            r=[79.4,83.7,64.1],
+            theta=categories,
+            fill='toself',
+            name='',
+        ))
+
+        fig.update_layout(
+            polar=dict(
+                radialaxis=dict(
+                    visible=True,
+                    range=[0, 100]
+                )),
+            showlegend=False
+        )
+        st.plotly_chart(fig)
+
+        st.write('-------------------------------------------')
+        st.subheader('Historical Trilemma Scores')
+        fig = go.Figure()
+        fig.add_trace(go.Scatter(x=[dt.datetime(2021,1,1),dt.datetime(2021,9,30),dt.datetime(2022,4,20)],
+                                 y=[71.7, 74.3, 75.7],
+                                 name="Trilemma Scores",
+                                 # line_color='red'
+                                 )
+                      )
+        fig.add_trace(go.Scatter(x=[dt.datetime(2021,1,1),dt.datetime(2021,9,30),dt.datetime(2022,4,20)],
+                                 y=[75,81,79.4],
+                                 name="FOOD SECURITY",
+                                 # line_color='orange'
+                                 )
+                      )
+        fig.add_trace(go.Scatter(x=[dt.datetime(2021,1,1),dt.datetime(2021,9,30),dt.datetime(2022,4,20)],
+                                 y=[90,82,83.7],
+                                 name="ENVIRONMENTAL SUSTAINABILITY",
+                                 # line_color='green'
+                                 )
+                      )
+        fig.add_trace(go.Scatter(x=[dt.datetime(2021,1,1),dt.datetime(2021,9,30),dt.datetime(2022,4,20)],
+                                 y=[50,60,64.1],
+                                 name="FOOD EQUITY",
+                                 # line_color='deepskyblue'
+                                 )
+                      )
+        fig.update_layout(title_text='Historical Trilemma Scores',
+                          # xaxis_rangesliadd_traceder_visible=True,
+                          # yaxis={"range": [0, 100]},  # {'autorange': True},
+                          # xaxis={"range": [dt.datetime(2021,1,1), dt.datetime.today()]}
+                          )
+        st.plotly_chart(fig)
+
+        st.write('-------------------------------------------')
+
+        st.subheader('Key Metrics')
+        col1, col2, col3 = st.columns(3)
+
+        with col1:
+            st.subheader("FOOD SECURITY")
+            st.image("https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fdpic.tiankong.com%2Fg7%2Fz1%2FQJ7220966815.jpg&refer=http%3A%2F%2Fdpic.tiankong.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1653184179&t=aec9265f87a1b1dd91dccfe7b77f7767")
+
+        with col2:
+            st.subheader("ENVIRONMENTAL SUSTAINABILITY")
+            st.image("https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fgss0.baidu.com%2F9fo3dSag_xI4khGko9WTAnF6hhy%2Fzhidao%2Fpic%2Fitem%2F1ad5ad6eddc451dae330509bbbfd5266d11632ff.jpg&refer=http%3A%2F%2Fgss0.baidu.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1653184243&t=f8ce23307b814507d1569b6e0fc850f3")
+
+        with col3:
+            st.subheader("FOOD EQUITY")
+            st.image("https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fp2.itc.cn%2Fq_70%2Fimages03%2F20200611%2F81855e2c9fe341eaa20e19778dc7d013.jpeg&refer=http%3A%2F%2Fp2.itc.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1653184265&t=cfa4acd4c8c5783ada97402b7404d548")
+
+
+
+
 
