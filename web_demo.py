@@ -14,6 +14,7 @@ sidebar_ = st.sidebar.radio(
 )
 
 input_series = pd.Series()
+df = pd.read_excel('Data/weights.xlsx')
 
 st.session_state["option_defaulted"] = 0
 if sidebar_ == 'Input':
