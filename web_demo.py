@@ -1,10 +1,9 @@
 import streamlit as st
+import numpy as np
 import pandas as pd
 import datetime as dt
-import matplotlib.pyplot as plt
-# import plotly.graph_objs as go
-import pymongo
-from settings import *
+import plotly.graph_objs as go
+
 
 st.title('Food System Trilemma Index Tool: DEMO')
 
@@ -15,8 +14,6 @@ sidebar_ = st.sidebar.radio(
 )
 
 input_series = pd.Series()
-client = pymongo.MongoClient(URL)
-df = pd.read_excel('Data/weights.xlsx')
 
 st.session_state["option_defaulted"] = 0
 if sidebar_ == 'Input':
@@ -189,58 +186,58 @@ if sidebar_ == 'Output':
                       'ENVIRONMENTAL SUSTAINABILITY',
                       'FOOD EQUITY']
 
-        # fig = go.Figure()
-        #
-        # fig.add_trace(go.Scatterpolar(
-        #     r=[79.4,83.7,64.1],
-        #     theta=categories,
-        #     fill='toself',
-        #     name='',
-        # ))
-        #
-        # fig.update_layout(
-        #     polar=dict(
-        #         radialaxis=dict(
-        #             visible=True,
-        #             range=[0, 100]
-        #         )),
-        #     showlegend=False
-        # )
-        # st.plotly_chart(fig)
+        fig = go.Figure()
+
+        fig.add_trace(go.Scatterpolar(
+            r=[79.4,83.7,64.1],
+            theta=categories,
+            fill='toself',
+            name='',
+        ))
+
+        fig.update_layout(
+            polar=dict(
+                radialaxis=dict(
+                    visible=True,
+                    range=[0, 100]
+                )),
+            showlegend=False
+        )
+        st.plotly_chart(fig)
 
         st.write('-------------------------------------------')
         st.subheader('Historical Trilemma Scores')
-        # fig = go.Figure()
-        # fig.add_trace(go.Scatter(x=[dt.datetime(2021,1,1),dt.datetime(2021,9,30),dt.datetime(2022,4,20)],
-        #                          y=[71.7, 74.3, 75.7],
-        #                          name="Trilemma Scores",
-        #                          # line_color='red'
-        #                          )
-        #               )
-        # fig.add_trace(go.Scatter(x=[dt.datetime(2021,1,1),dt.datetime(2021,9,30),dt.datetime(2022,4,20)],
-        #                          y=[75,81,79.4],
-        #                          name="FOOD SECURITY",
-        #                          # line_color='orange'
-        #                          )
-        #               )
-        # fig.add_trace(go.Scatter(x=[dt.datetime(2021,1,1),dt.datetime(2021,9,30),dt.datetime(2022,4,20)],
-        #                          y=[90,82,83.7],
-        #                          name="ENVIRONMENTAL SUSTAINABILITY",
-        #                          # line_color='green'
-        #                          )
-        #               )
-        # fig.add_trace(go.Scatter(x=[dt.datetime(2021,1,1),dt.datetime(2021,9,30),dt.datetime(2022,4,20)],
-        #                          y=[50,60,64.1],
-        #                          name="FOOD EQUITY",
-        #                          # line_color='deepskyblue'
-        #                          )
-        #               )
-        # fig.update_layout(title_text='Historical Trilemma Scores',
-        #                   # xaxis_rangesliadd_traceder_visible=True,
-        #                   # yaxis={"range": [0, 100]},  # {'autorange': True},
-        #                   # xaxis={"range": [dt.datetime(2021,1,1), dt.datetime.today()]}
-        #                   )
-        # st.plotly_chart(fig)
+        fig = go.Figure()
+        fig.add_trace(go.Scatter(x=[dt.datetime(2021,1,1),dt.datetime(2021,9,30),dt.datetime(2022,4,20)],
+                                 y=[71.7, 74.3, 75.7],
+                                 name="Trilemma Scores",
+                                 # line_color='red'
+                                 )
+                      )
+        fig.add_trace(go.Scatter(x=[dt.datetime(2021,1,1),dt.datetime(2021,9,30),dt.datetime(2022,4,20)],
+                                 y=[75,81,79.4],
+                                 name="FOOD SECURITY",
+                                 # line_color='orange'
+                                 )
+                      )
+        fig.add_trace(go.Scatter(x=[dt.datetime(2021,1,1),dt.datetime(2021,9,30),dt.datetime(2022,4,20)],
+                                 y=[90,82,83.7],
+                                 name="ENVIRONMENTAL SUSTAINABILITY",
+                                 # line_color='green'
+                                 )
+                      )
+        fig.add_trace(go.Scatter(x=[dt.datetime(2021,1,1),dt.datetime(2021,9,30),dt.datetime(2022,4,20)],
+                                 y=[50,60,64.1],
+                                 name="FOOD EQUITY",
+                                 # line_color='deepskyblue'
+                                 )
+                      )
+        fig.update_layout(title_text='Historical Trilemma Scores',
+                          # xaxis_rangesliadd_traceder_visible=True,
+                          # yaxis={"range": [0, 100]},  # {'autorange': True},
+                          # xaxis={"range": [dt.datetime(2021,1,1), dt.datetime.today()]}
+                          )
+        st.plotly_chart(fig)
         chart_data = pd.DataFrame(
             [[np.random.randn(20, 3)]],
             columns=['a', 'b', 'c'])
