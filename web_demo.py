@@ -18,29 +18,47 @@ sidebar_ = st.sidebar.radio(
 input_series = pd.Series()
 df = pd.read_pickle('Data/weights.pkl')
 which = [df[df['status']=='on'].index[0] if len(df[df['status']=='on'])==1 else food_lst[0]][0]
-st.write(which)
+which_one = food_lst.index(which)
 
 st.session_state["option_defaulted"] = 0
 if sidebar_ == 'Input':
     sidebar_2 = st.sidebar.radio(
         'The New Language of Food',
         food_lst,
-    index=food_lst.index(which)
+    index=which_one
     )
     option = st.selectbox(
         'The New Language of Food',
         food_lst,
-    index=food_lst.index(sidebar_2)
+    index=which_one
     )
+
+    if sidebar_2 != which:
+        df.iloc[which_one, 3] = 'off'
+        df.iloc[food_lst.index(sidebar_2), 3] = 'on'
+        df.to_pickle('Data/weights.pkl')
+        which = option
+        st.experimental_rerun()
+    if option != which:
+        df.iloc[which_one, 3] = 'off'
+        df.iloc[food_lst.index(option), 3] = 'on'
+        df.to_pickle('Data/weights.pkl')
+        which = option
+        st.experimental_rerun()
+
 
     for k,v in food_dct.items():
         if option == k:
             st.info(v)
 
+    level_ = [df.iloc[which_one,-1] if type(df.iloc[which_one,-1]) == np.float64 else 0][0]
     correlation = st.select_slider(
         'Correlation',
         options=['Irrelevant', 'Slightly Related', 'Involved', 'Essential'],
+        index = level_
     )
+    # df.loc[]
+
     # if len(correlation) != 0:
     #     st.write('该领域中，你认为项目与之相关的等级为：', correlation)
     # st.balloons()
@@ -51,18 +69,22 @@ if sidebar_ == 'Input':
 
     with col2:
         if st.button(label="Next", help="Click to jump to the next problem"):
-            df.iloc[food_lst.index(which), 3] = 'off'
-            df.iloc[food_lst.index(which) + 1, 3] = 'on'
-            df.to_pickle('Data/weights.pkl')
-            st.balloons()
-            st.experimental_rerun()
+            if which_one == len(food_lst) - 1:
+                st.warning('This is the last one.')
+            else:
+                df.iloc[which_one, 3] = 'off'
+                df.iloc[which_one + 1, 3] = 'on'
+                df.to_pickle('Data/weights.pkl')
+                st.experimental_rerun()
     with col1:
         if st.button(label="Previous", help="Click to jump to the previous problem", on_click=None, args=None, kwargs=None):
-            df.iloc[food_lst.index(which), 3] = 'off'
-            df.iloc[food_lst.index(which) - 1, 3] = 'on'
-            df.to_pickle('Data/weights.pkl')
-            st.balloons()
-            st.experimental_rerun()
+            if which_one == 0:
+                st.warning('This is the first one.')
+            else:
+                df.iloc[which_one, 3] = 'off'
+                df.iloc[which_one - 1, 3] = 'on'
+                df.to_pickle('Data/weights.pkl')
+                st.experimental_rerun()
     with col3:
         if st.button(label="Submit", help="Click to submit all responses", on_click=None, args=None, kwargs=None):
             st.write('The submit succeeded.')
@@ -74,11 +96,7 @@ if sidebar_ == 'Input':
 # st.map(df)
 
 if sidebar_ == 'Output':
-    try:
-        input_series = pd.read_pickle('Data/temp.pkl')
-    except:
-        pass
-    if len(input_series) == 0:
+    if len(df.columns) < 5:
         st.info("The system haven't learned all the necessary information, please reply to the input terminal.")
         st.button('input',help='Click to jump to the input terminal.')
 
