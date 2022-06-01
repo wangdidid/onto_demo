@@ -15,7 +15,6 @@ sidebar_ = st.sidebar.radio(
     index=0
 )
 
-input_series = pd.Series()
 df = pd.read_pickle('Data/weights.pkl')
 which = [df[df['status']=='on'].index[0] if len(df[df['status']=='on'])==1 else food_lst[0]][0]
 which_one = food_lst.index(which)
@@ -51,11 +50,12 @@ if sidebar_ == 'Input':
         if option == k:
             st.info(v)
 
-    level_ = [df.iloc[which_one,-1] if type(df.iloc[which_one,-1]) == np.float64 else 0][0]
+    option_series = df.loc[which].dropna()
+    level_ = int([option_series[-1] if type(option_series[-1]) == np.float64 else 0][0])
     correlation = st.select_slider(
         'Correlation',
-        options=['Irrelevant', 'Slightly Related', 'Involved', 'Essential'],
-        index = level_
+        options = level_lst,
+        value = level_lst[level_]
     )
     # df.loc[]
 

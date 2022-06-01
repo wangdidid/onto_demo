@@ -52,3 +52,4 @@ food_dct = {
     'Systems Biology':'A holistic approach to deciphering the complexity of biological systems by studying the interactions and behavior of the components of biological entities (for example molecules, cells, organs, and organisms) with the understanding that the whole of a living organism is more than the sum of its parts. The field integrates biology, computer science, engineering, bioinformatics, and physics.',
 }
 
+level_lst = ['Irrelevant', 'Slightly Related', 'Involved', 'Essential']
