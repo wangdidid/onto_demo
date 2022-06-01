@@ -57,7 +57,10 @@ if sidebar_ == 'Input':
         options = level_lst,
         value = level_lst[level_]
     )
-    # df.loc[]
+    if correlation != level_lst[level_]:
+        df.loc[which, str(dt.datetime.today().date())] = level_lst.index(correlation)
+        df.to_pickle('Data/weights.pkl')
+        st.warning('Your changes have been recorded.')
 
     # if len(correlation) != 0:
     #     st.write('该领域中，你认为项目与之相关的等级为：', correlation)
@@ -90,18 +93,18 @@ if sidebar_ == 'Input':
             st.write('The submit succeeded.')
             time.sleep(5)
 
-# df = pd.DataFrame(
-#     np.random.randn(1000, 2) / [50, 50] + [37.76, -122.4],
-#     columns=['lat', 'lon'])
-# st.map(df)
 
 if sidebar_ == 'Output':
     if len(df.columns) < 5:
         st.info("The system haven't learned all the necessary information, please reply to the input terminal.")
         st.button('input',help='Click to jump to the input terminal.')
 
-
     else:
+        df_res = pd.DataFrame(index=df.columns[4:], columns=[*df.columns[:3]]+['Trilemma Score']+[*df.index])
+        df_res.iloc[:, 4:] = df.iloc[:, 4:].T.ffill() / 3
+        df_res.iloc[:, :3] = 10 * (df_res.iloc[:, 4:] @ df.iloc[:, :3]) / len(df)
+        df_res['Trilemma Score'] = df_res.iloc[:, :3].mean(axis=1)
+
         st.download_button(
             label="Full Report",
             help='Click to download the full report(PDF)',
@@ -109,25 +112,28 @@ if sidebar_ == 'Output':
             file_name=None,
             mime=None,
         )
+
         col1, col2 = st.columns(2)
 
         with col1:
             st.subheader('Trilemma Score')
-            st.info(75.7)
+            st.info('{:.2f}'.format(df_res['Trilemma Score'][-1]))
         with col2:
             st.subheader('Balance Grade')
-            st.info('BBC')
+            st.info(''.join(pd.cut(df_res.iloc[-1, :3],[0,25,50,75,100],labels=['D','C','B','A'])))
         st.write('-------------------------------------------')
 
         st.subheader('Balance')
-        categories = ['FOOD SECURITY',
-                      'ENVIRONMENTAL SUSTAINABILITY',
-                      'FOOD EQUITY']
 
+        date_ = st.selectbox(
+            'Date',
+            [*df_res.index],
+            index=[*df_res.index].index(df_res.index.max())
+        )
         fig = go.Figure()
 
         fig.add_trace(go.Scatterpolar(
-            r=[79.4,83.7,64.1],
+            r=df_res.loc[date_][categories].values,
             theta=categories,
             fill='toself',
             name='',
@@ -146,41 +152,19 @@ if sidebar_ == 'Output':
         st.write('-------------------------------------------')
         st.subheader('Historical Trilemma Scores')
         fig = go.Figure()
-        fig.add_trace(go.Scatter(x=[dt.datetime(2021,1,1),dt.datetime(2021,9,30),dt.datetime(2022,4,20)],
-                                 y=[71.7, 74.3, 75.7],
-                                 name="Trilemma Scores",
-                                 # line_color='red'
-                                 )
-                      )
-        fig.add_trace(go.Scatter(x=[dt.datetime(2021,1,1),dt.datetime(2021,9,30),dt.datetime(2022,4,20)],
-                                 y=[75,81,79.4],
-                                 name="FOOD SECURITY",
-                                 # line_color='orange'
-                                 )
-                      )
-        fig.add_trace(go.Scatter(x=[dt.datetime(2021,1,1),dt.datetime(2021,9,30),dt.datetime(2022,4,20)],
-                                 y=[90,82,83.7],
-                                 name="ENVIRONMENTAL SUSTAINABILITY",
-                                 # line_color='green'
-                                 )
-                      )
-        fig.add_trace(go.Scatter(x=[dt.datetime(2021,1,1),dt.datetime(2021,9,30),dt.datetime(2022,4,20)],
-                                 y=[50,60,64.1],
-                                 name="FOOD EQUITY",
-                                 # line_color='deepskyblue'
-                                 )
-                      )
+        for _ in ['Trilemma Score']+categories:
+            fig.add_trace(go.Scatter(x=df_res.index,
+                                     y=df_res[_],
+                                     name=_,
+                                     # line_color='red'
+                                     )
+                          )
         fig.update_layout(title_text='Historical Trilemma Scores',
                           # xaxis_rangesliadd_traceder_visible=True,
                           # yaxis={"range": [0, 100]},  # {'autorange': True},
                           # xaxis={"range": [dt.datetime(2021,1,1), dt.datetime.today()]}
                           )
         st.plotly_chart(fig)
-        chart_data = pd.DataFrame(
-            [[np.random.randn(20, 3)]],
-            columns=['a', 'b', 'c'])
-
-        st.line_chart(chart_data)
 
         st.write('-------------------------------------------')
 

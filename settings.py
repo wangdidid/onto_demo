@@ -53,3 +53,8 @@ food_dct = {
 }
 
 level_lst = ['Irrelevant', 'Slightly Related', 'Involved', 'Essential']
+
+categories = ['FOOD SECURITY',
+              'ENVIRONMENTAL SUSTAINABILITY',
+              'FOOD EQUITY'
+              ]
